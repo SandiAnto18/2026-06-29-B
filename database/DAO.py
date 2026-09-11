@@ -10,7 +10,7 @@ class DAO():
         conn = DBConnect.get_connection()
         results = []
         cursor = conn.cursor(dictionary=True)
-        query= "select distinct a.*, from album a,track t  where t.AlbumId=a.AlbumId group by a.AlbumId order by a.Title  "
+        query= "select distinct a.* from album a,track t  where t.AlbumId=a.AlbumId order by a.Title"
         cursor.execute(query)
 
         for row in cursor:
