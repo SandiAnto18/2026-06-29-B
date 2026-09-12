@@ -12,7 +12,8 @@ class Model:
         albums= DAO.getAllAlbumByTracks()
     #PRENDI UN OGGETTO ALLA VOLTA DI ALBUMS E LO POPOLI CON LE SUE TRACCIA
         for a in albums:
-            DAO.getTracksForAlbum(a)
+            DAO.getTracksForAlbum(a) #prendi tutte le sue tracce e aggiungile ad album a
+        self._graph.add_nodes_from(albums) #poi li aggiungi tutti come nodi
 
     #DEVO CHIAMARE IL METODO _SHARE GENRE PER COSTRUIRE GLI ARCHI
     #è importante distinguere tra quando scrivi i metodi
@@ -56,4 +57,12 @@ class Model:
     def getEdges(self):
         return len(self._graph.edges())
 
+    def TotCompConnesse(self):
 
+        comp= list(nx.connected_components(self._graph))
+        return comp
+
+    def getLargestComp(self, comp):
+        largest =(max(comp, key=len)) # scegli il max (confronta le componenti in base alla loro lunghezza)
+        largestOrdinata= sorted(largest, key=lambda x:x.Title) #ordino oggetti album in ordine alfabetico
+        return largestOrdinata
