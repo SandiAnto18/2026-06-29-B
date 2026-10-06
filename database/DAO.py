@@ -6,37 +6,86 @@ from model.Track import Track
 class DAO():
 
     @staticmethod
-    def getAllAlbumByTracks():
+    def getAllAlbums():
         conn = DBConnect.get_connection()
+
         results = []
+
         cursor = conn.cursor(dictionary=True)
-        query= "select distinct a.* from album a,track t  where t.AlbumId=a.AlbumId order by a.Title"
+
+        query = """
+                select distinct a.*
+from album a, track t
+where t.AlbumId =a.AlbumId 
+                """
+
         cursor.execute(query)
 
         for row in cursor:
-            results.append(Album(row["AlbumId"],row["Title"],row["ArtistId"]))
+            results.append(Album(**row))
 
         cursor.close()
         conn.close()
+
         return results
 
+    # OUTPUT album preso come oggetto: albumid|title|artistid
+
     @staticmethod
-    def getTracksForAlbum(a):
-        # gli passo un album e lo popolo con i suoi tracks
+    def getTracksByAlbum(AlbumId):
         conn = DBConnect.get_connection()
+
         results = []
+
         cursor = conn.cursor(dictionary=True)
-        #NON NECESSARIO CONDIZIONE DI WHERE PERCHè ABBIAMO GIà IN INPUT L'ALBUM ID CREATO NELLA QUERY DEI NODI
-        #per avere  i rsultati in ordine alfabetico uso order by t.name
-        query = "select t.* from track t,album a where t.AlbumId = a.AlbumId  and a.AlbumId = %s order by t.Name"
-        cursor.execute(query, (a.AlbumId,)) #Prendi l'AlbumId dell'oggetto che hai ricevuto in input e lo usi per %s.
+
+        query = """select t.*
+from track t
+where t.AlbumId =%s
+                
+                """
+
+        cursor.execute(query,(AlbumId,))
+
         for row in cursor:
             results.append(Track(**row))
-            a.Tracks= results #"Ho trovato i Tracks e li metto direttamente dentro l'Album che mi hai passato:a.Tracks"
-        a.Tracks=results
 
         cursor.close()
         conn.close()
+
+        return results
+
+#output Trackid| Name| Albumid|.. |Unit pRICE
+
+
+    @staticmethod
+    def getAlbum1Album2byGenre():#non servono i nodi in input perchè il grafo ha già tutti gli album come nodi e sono stati già costruiti.
+        conn = DBConnect.get_connection()
+
+        results = []
+
+        cursor = conn.cursor(dictionary=True)
+
+        query = """select distinct a.AlbumId as album1 ,a2.AlbumId as album2
+from album a, track t, album a2,track t2
+where a.AlbumId =t.AlbumId 
+and a2.AlbumId =t2.AlbumId 
+and t.GenreId =t2.GenreId
+and a.AlbumId < a2.AlbumId 
+
+                """
+
+        cursor.execute(query)
+
+        for row in cursor:
+            results.append((row['album1'], row['album2']))
+
+        cursor.close()
+        conn.close()
+
+        return results
+
+
 
 
 

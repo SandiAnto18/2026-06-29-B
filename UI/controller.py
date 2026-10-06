@@ -22,23 +22,41 @@ class Controller:
 
         self._view.update_page()
 
-    def handleStampaInfo(self,e):
+    def handleStampaInfo(self, e):
+        # PULISCO l'output precedente
         self._view._txt_result.controls.clear()
+
+        # Prendo dal Model la lista delle componenti connesse
         cc = self._model.TotCompConnesse()
-        # quante componenti ci sono? -> len(lista)
-        self._view._txt_result.controls.append(ft.Text(f"Il grafo ha {len(cc)} componenti connesse"))
-        # largest contiene la lista con più attori (l'insieme che contiene più nodi/attori)
+
+        # Il numero di componenti = lunghezza della lista
+        self._view._txt_result.controls.append(
+            ft.Text(f"Il grafo ha {len(cc)} componenti connesse")
+        )
+
+        # Trovo la componente connessa più grande
         largest = self._model.getLargestComp(cc)
-        self._view._txt_result.controls.append(ft.Text(f"Dimensione della componente connessa più grande: {len(largest)} album"))
-        # cambia valore a ogni giro del ciclo. a=luca stampa a.Name "luca"
-        # e quindi li prende ad uno  ad uno i valori(attori) della lista
-        #self._view.txt_result.controls.append(ft.Text("Dettagli degli album appartenenti alla conponente connessa più grande:"
-        self._view._txt_result.controls.append(ft.Text ("Dettagli degli album appartenenti alla componenti connessa più grande:"))
+
+        # La dimensione della componente = numero di album che contiene
+        self._view._txt_result.controls.append(
+            ft.Text(f"Dimensione della componente connessa più grande: {len(largest)} album")
+        )
+
+        # Stampo il titolo e il numero di brani di ogni album
+        self._view._txt_result.controls.append(
+            ft.Text("Dettagli degli album appartenenti alla componente connessa più grande:")
+        )
+
+        # ORDINO gli album alfabeticamente per titolo
+        largest.sort(key=lambda a: a.Title)
+
+        # Scorro gli album uno alla volta
         for a in largest:
             self._view._txt_result.controls.append(
-                ft.Text(f"-{a.Title}: {len(a.Tracks)} brani"))
+                ft.Text(f"- {a.Title}: {len(a.Tracks)} brani")
+            )
 
+        # Aggiorno la pagina per visualizzare i risultati
         self._view.update_page()
-
     def handleSelezione(self,e):
         pass

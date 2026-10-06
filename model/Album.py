@@ -8,10 +8,7 @@ class Album:
     AlbumId: int
     Title: str
     ArtistId:int
-    Tracks:list[Track]=None #può	risultare	conveniente
-#aggiungere	alla	relativa	classe	un	attributo
-#aggiuntivo	che	memorizzi	la	lista	di	tutti	i
-#brani	appartenenti	a	quell'album.
+    Tracks:list[Track]=None #LA LISTA CONTIENE OGGETTI TRACK
 #CREO CLASSE TRACK
 #hash permette di identificare al grafo di identificare correttamente
     def __hash__(self):
