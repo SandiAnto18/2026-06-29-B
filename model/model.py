@@ -23,9 +23,9 @@ class Model:
             ArchiMap[album.AlbumId]=album
 
         archi=DAO.getAlbum1Album2byGenre()
-        for a1,a2 in archi:
-            album1=ArchiMap[a1]
-            album2=ArchiMap[a2]
+        for s1,s2 in archi:
+            album1=ArchiMap[s1]
+            album2=ArchiMap[s2]
             self._graph.add_edge(album1,album2) #sol
             #TypeError: Graph.add_edges_from() takes 2 positional arguments but 3 were given
 
